@@ -46,13 +46,13 @@ st.markdown("""
     transition: transform 0.2s ease;
 }
 .stTextInput input, .stSelectbox div, .stFileUploader label, .stTextArea textarea {
-    background-color: #181818 !important;
+    background-color: none !important;
     color: #ffffff !important;
     border: none !important;
     border-radius: 4px;
 }
 div[data-testid="stFileUploaderDropzone"] {
-    background-color: #181818 !important;
+    background-color: none !important;
     border: none !important;
     color: #ffffff !important;
 }
@@ -76,7 +76,7 @@ button[kind="secondary"][key^="edit_"] {
 }
 /* Footer Styling */
 .footer {
-    background-color: #181818;
+    background-color: none;
     padding: 20px;
     text-align: center;
     border-top: 1px solid #333;
