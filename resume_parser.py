@@ -1,26 +1,31 @@
+import fitz  # PyMuPDF
+from PIL import Image
 import pytesseract
-from pdf2image import convert_from_path
-import tempfile
-import os
+
+def extract_text_from_pdf(pdf_path):
+    text = ""
+    doc = fitz.open(pdf_path)
+    for page in doc:
+        text += page.get_text()
+    doc.close()
+    return text
+
+def extract_text_with_ocr(pdf_path):
+    text = ""
+    doc = fitz.open(pdf_path)
+    for page_num in range(len(doc)):
+        page = doc.load_page(page_num)
+        pix = page.get_pixmap(dpi=300)
+        img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
+        text += pytesseract.image_to_string(img)
+    doc.close()
+    return text
 
 def parse_resume(pdf_path):
     try:
-        # Check if Tesseract is installed
-        pytesseract.get_tesseract_version()  # This will raise an error if Tesseract is not found
-    except pytesseract.TesseractNotFoundError:
-        raise Exception("Tesseract is not installed or it's not in your PATH. Please install Tesseract OCR to parse resumes.")
-
-    try:
-        # Convert PDF to images
-        images = convert_from_path(pdf_path)
-        # Extract text from each page
-        text = ""
-        for img in images:
-            text += pytesseract.image_to_string(img) + "\n"
+        text = extract_text_from_pdf(pdf_path)
+        if len(text.strip()) < 100:  # Fallback to OCR if text extraction yields insufficient content
+            text = extract_text_with_ocr(pdf_path)
         return text.strip()
     except Exception as e:
         raise Exception(f"Failed to parse resume: {str(e)}")
-    finally:
-        # Clean up temporary files if needed
-        if os.path.exists(pdf_path):
-            os.remove(pdf_path)

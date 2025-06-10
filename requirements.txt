@@ -4,4 +4,3 @@ google-generativeai
 PyMuPDF
 Pillow
 fpdf
-pdf2img
