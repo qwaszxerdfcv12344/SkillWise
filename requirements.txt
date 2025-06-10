@@ -3,4 +3,4 @@ pytesseract
 google-generativeai
 PyMuPDF
 Pillow
-pyinstaller
+fpdf
