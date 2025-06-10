@@ -31,13 +31,13 @@ st.markdown("""
     transition: transform 0.2s ease;
 }
 .stTextInput input, .stSelectbox div, .stFileUploader label, .stTextArea textarea {
-    background-color: #181818 !important;
+    background-color: none !important;
     color: #ffffff !important;
     border: none !important;
     border-radius: 4px;
 }
 div[data-testid="stFileUploaderDropzone"] {
-    background-color: #181818 !important;
+    background-color: none !important;
     border: none !important;
     color: #ffffff !important;
 }
@@ -61,7 +61,7 @@ button[kind="secondary"][key^="edit_"] {
 }
 /* Footer Styling */
 .footer {
-    background-color: #181818;
+    background-color: none;
     padding: 20px;
     text-align: center;
     border-top: 1px solid #333;
@@ -209,7 +209,7 @@ with tab1:
         try:
             st.session_state.resume_text = parse_resume(tmp_path)
             if len(st.session_state.resume_text.strip()) > 20:
-                st.success("✅ Resume uploaded and parsed!")
+                st.success("✅ Resume uploaded successfully!")
             else:
                 st.error("⚠️ Failed to extract meaningful content. Try another resume.")
         except FileNotFoundError:
