@@ -2,5 +2,6 @@ streamlit
 pytesseract
 google-generativeai
 PyMuPDF
+fpdf
 Pillow
 pyinstaller
