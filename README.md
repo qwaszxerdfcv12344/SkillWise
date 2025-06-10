@@ -13,7 +13,6 @@ Progress tracker, interactive Q&A, and export options (TXT, PDF, JSON).
 Footer with social media handles and copyright notice.
 
 🛠️ Setup Instructions
-Option 1: Run as a Python App
 
 Clone the Repository:git clone https://github.com/Sahaj33-op/SkillWise.git
 cd SkillWise
@@ -46,34 +45,12 @@ The app will open in your browser at http://localhost:8501.
 
 
 
-Option 2: Run as a Windows Executable (.exe)
-
-Download the Executable:
-Download SkillWise.exe from the Releases page. (Upload the .exe to a release after creation)
-
-
-Install Tesseract for OCR:
-Download and install Tesseract from here.
-Add Tesseract to your system PATH (e.g., C:\Program Files\Tesseract-OCR).
-
-
-Run the Executable:
-Double-click SkillWise.exe.
-The app will open in your default web browser.
-
-
-Enter Gemini API Key:
-In the app’s sidebar, enter your Gemini API key to enable roadmap generation.
-
-
-
 📦 Project Structure
 
 app.py: Main Streamlit app.
 resume_parser.py: Parses PDF resumes.
 roadmap_generator.py: Generates learning roadmaps using Gemini API.
 goal_analyzer.py: Analyzes career goals (placeholder).
-launch.py: Entry point for the .exe version.
 requirements.txt: Lists Python dependencies.
 
 📄 Dependencies
@@ -83,7 +60,6 @@ fpdf2
 pymupdf
 pytesseract
 google-generativeai
-pyinstaller (for creating the .exe)
 
 📜 License
 © 2025 SkillWise. All rights reserved.
