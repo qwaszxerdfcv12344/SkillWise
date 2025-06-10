@@ -4,11 +4,26 @@ import os
 import json
 import re
 import time
+import sys
+import webbrowser
 from datetime import datetime
+from pathlib import Path
 from fpdf import FPDF
 from resume_parser import parse_resume
 from roadmap_generator import generate_roadmap
 import google.generativeai as genai
+
+# Handle PyInstaller resource paths
+def resource_path(relative_path):
+    """Get the absolute path to a resource, works for dev and PyInstaller."""
+    if hasattr(sys, '_MEIPASS'):
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)
+
+# Use a user-writable directory for generated files
+user_dir = Path.home() / "SkillWiseData"
+user_dir.mkdir(exist_ok=True)
 
 # Configure Streamlit page
 st.set_page_config(page_title="SkillWise - AI Roadmap Generator", layout="wide", initial_sidebar_state="expanded")
@@ -31,13 +46,13 @@ st.markdown("""
     transition: transform 0.2s ease;
 }
 .stTextInput input, .stSelectbox div, .stFileUploader label, .stTextArea textarea {
-    background-color: none !important;
+    background-color: #181818 !important;
     color: #ffffff !important;
     border: none !important;
     border-radius: 4px;
 }
 div[data-testid="stFileUploaderDropzone"] {
-    background-color: none !important;
+    background-color: #181818 !important;
     border: none !important;
     color: #ffffff !important;
 }
@@ -61,7 +76,7 @@ button[kind="secondary"][key^="edit_"] {
 }
 /* Footer Styling */
 .footer {
-    background-color: none;
+    background-color: #181818;
     padding: 20px;
     text-align: center;
     border-top: 1px solid #333;
@@ -132,13 +147,15 @@ if st.session_state.first_visit:
 
 # Load progress from file
 def load_progress():
-    if os.path.exists("progress.json"):
-        with open("progress.json", "r") as f:
+    progress_file = user_dir / "progress.json"
+    if progress_file.exists():
+        with open(progress_file, "r") as f:
             st.session_state.progress = json.load(f)
 
 # Save progress to file
 def save_progress():
-    with open("progress.json", "w") as f:
+    progress_file = user_dir / "progress.json"
+    with open(progress_file, "w") as f:
         json.dump(st.session_state.progress, f)
 
 # Handle Gemini API key with Submit button and Change option
@@ -287,7 +304,8 @@ with tab1:
                         "rating": ease_rating,
                         "timestamp": datetime.now().isoformat()
                     }
-                    with open("survey_feedback.json", "a") as f:
+                    survey_file = user_dir / "survey_feedback.json"
+                    with open(survey_file, "a") as f:
                         json.dump(feedback_data, f)
                         f.write("\n")
                     st.success("✅ Thank you for your feedback!")
@@ -379,7 +397,7 @@ with tab2:
             "Communication": "Effective Communication Skills - Coursera"
         }
         if skills_to_check:
-            missing_skills = [skill for skill in skills_to_check if skill.lower() not in st.session_state.resume_text.lower()]
+            missing_skills = [skill for skill in skills_to_check if skill.lower() in st.session_state.resume_text.lower()]
             if missing_skills:
                 st.subheader("🔍 Skill Gap Analysis")
                 st.markdown(f'<p style="font-size: 40px;"><h5>●    Skills missing for {effective_role}: {", ".join(missing_skills)}</h5></p>', unsafe_allow_html=True)
@@ -546,13 +564,15 @@ with tab2:
         col1, col2 = st.columns(2)
         with col1:
             if st.button("👍 Yes"):
-                with open("feedback.json", "a") as f:
+                feedback_file = user_dir / "feedback.json"
+                with open(feedback_file, "a") as f:
                     json.dump({"roadmap": st.session_state.roadmap, "feedback": "positive", "timestamp": datetime.now().isoformat()}, f)
                     f.write("\n")
                 st.success("✅ Thank you for your feedback!")
         with col2:
             if st.button("👎 No"):
-                with open("feedback.json", "a") as f:
+                feedback_file = user_dir / "feedback.json"
+                with open(feedback_file, "a") as f:
                     json.dump({"roadmap": st.session_state.roadmap, "feedback": "negative", "timestamp": datetime.now().isoformat()}, f)
                     f.write("\n")
                 st.success("✅ Thank you for your feedback! We'll work on improving.")
@@ -635,7 +655,8 @@ with tab2:
         
         # Shareable link (simulated)
         unique_id = hash(st.session_state.roadmap) % 1000000
-        with open(f"roadmap_{unique_id}.json", "w") as f:
+        roadmap_file = user_dir / f"roadmap_{unique_id}.json"
+        with open(roadmap_file, "w") as f:
             json.dump(roadmap_data, f)
         st.markdown(f"🔗 Shareable link: `http://skillwise.local/roadmap/{unique_id}` (Note: Deploy to a server for real links)")
     else:
@@ -649,8 +670,17 @@ st.markdown("""
     </div>
     <p>© 2025 SkillWise. All rights reserved.</p>
     <p>
-        <a href="">Contact Us</a> | 
-        <a href="" target="_blank">Terms of Service</a>
+        <a href="mailto:support@skillwise.local">Contact Us</a> | 
+        <a href="http://skillwise.local/terms.html" target="_blank">Terms of Service</a>
     </p>
 </div>
 """, unsafe_allow_html=True)
+
+# Auto-open browser when running as .exe
+if __name__ == "__main__":
+    # Check if running as a PyInstaller bundle
+    if getattr(sys, 'frozen', False):
+        port = 8501
+        url = f"http://localhost:{port}"
+        webbrowser.open(url)
+        os.system(f"streamlit run {sys.argv[0]} --server.port {port}")
