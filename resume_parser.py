@@ -1,41 +1,26 @@
-# resume_parser.py
 import pytesseract
-from PIL import Image
-import fitz  # PyMuPDF
-from PIL import Image
+from pdf2image import convert_from_path
+import tempfile
+import os
 
+def parse_resume(pdf_path):
+    try:
+        # Check if Tesseract is installed
+        pytesseract.get_tesseract_version()  # This will raise an error if Tesseract is not found
+    except pytesseract.TesseractNotFoundError:
+        raise Exception("Tesseract is not installed or it's not in your PATH. Please install Tesseract OCR to parse resumes.")
 
-def parse_resume(file_path):
-    doc = fitz.open(file_path)
-    text = ""
-    for page in doc:
-        text += page.get_text()
-        if not text.strip():  # fallback to OCR
-            pix = page.get_pixmap()
-            img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
-            text += pytesseract.image_to_string(img)
-    return text.strip()
-
-def extract_text_from_pdf(pdf_path):
-    text = ""
-    doc = fitz.open(pdf_path)
-    for page in doc:
-        text += page.get_text()
-    doc.close()
-    return text
-
-def extract_text_with_ocr(pdf_path):
-    text = ""
-    doc = fitz.open(pdf_path)
-    for page_num in range(len(doc)):
-        page = doc.load_page(page_num)
-        pix = page.get_pixmap(dpi=300)
-        img = Image.frombytes("RGB", [pix.width, pix.height], pix.samples)
-        text += pytesseract.image_to_string(img)
-    return text
-
-def parse_resume(resume_path):
-    text = extract_text_from_pdf(resume_path)
-    if len(text.strip()) < 100:  # fallback if text extraction fails
-        text = extract_text_with_ocr(resume_path)
-    return text
+    try:
+        # Convert PDF to images
+        images = convert_from_path(pdf_path)
+        # Extract text from each page
+        text = ""
+        for img in images:
+            text += pytesseract.image_to_string(img) + "\n"
+        return text.strip()
+    except Exception as e:
+        raise Exception(f"Failed to parse resume: {str(e)}")
+    finally:
+        # Clean up temporary files if needed
+        if os.path.exists(pdf_path):
+            os.remove(pdf_path)
