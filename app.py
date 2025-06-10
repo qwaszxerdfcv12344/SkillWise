@@ -210,7 +210,7 @@ with tab1:
             st.session_state.resume_text = parse_resume(tmp_path)
             os.remove(tmp_path)
             if len(st.session_state.resume_text.strip()) > 20:
-                st.success("✅ Resume uploaded and parsed!")
+                st.success("✅ Resume uploaded successfully!")
             else:
                 st.error("⚠️ Failed to extract meaningful content. Try another resume.")
         except Exception as e:
@@ -391,7 +391,7 @@ with tab2:
                     else:
                         st.markdown(f"- **{skill}**: No specific course recommendation available. Try searching on Coursera or Udemy.")
             else:
-                st.write("✅ Your resume covers all key skills for this role!")
+                st.markdown(f'<p style="font-size: 40px;"><h5>✅ Your resume covers all key skills for this role!</h5></p>', unsafe_allow_html=True)
         
         # Tag-based course filters (fixed)
         st.subheader("🏷️ Filter Courses")
