@@ -59,5 +59,3 @@ Try the app live: [SkillWise on Streamlit Community Cloud](https://skillwise.str
 
 ## 📱 Connect with Us
 - [GitHub](https://github.com/Sahaj33-op/)
-
-For support, email us at [support@skillwise.local](mailto:support@skillwise.local).
