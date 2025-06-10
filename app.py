@@ -653,17 +653,4 @@ st.markdown("""
         <a href="http://skillwise.local/terms.html" target="_blank">Terms of Service</a>
     </p>
 </div>
-<<<<<<< HEAD
 """, unsafe_allow_html=True)
-
-# Auto-open browser when running as .exe
-if __name__ == "__main__":
-    # Check if running as a PyInstaller bundle
-    if getattr(sys, 'frozen', False):
-        port = 8501
-        url = f"http://localhost:{port}"
-        webbrowser.open(url)
-        os.system(f"streamlit run {sys.argv[0]} --server.port {port}")
-=======
-""", unsafe_allow_html=True)
->>>>>>> 2477533 (Remove .exe-related files and instructions)
