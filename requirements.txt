@@ -3,5 +3,6 @@ pytesseract
 google-generativeai
 PyMuPDF
 Pillow
+fpdf2==2.7.9
 fpdf2
 nltk
