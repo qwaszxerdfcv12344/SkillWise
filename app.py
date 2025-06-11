@@ -14,84 +14,119 @@ from roadmap_generator import generate_roadmap
 from goal_analyzer import analyze_goals
 import google.generativeai as genai
 
-# Configure Streamlit page (must be the first Streamlit command)
+# Configure Streamlit page
 st.set_page_config(page_title="SkillWise - AI Roadmap Generator", layout="wide", initial_sidebar_state="expanded")
 
-# Permanent dark theme with refined styling, button hover effect, and footer styling
+# Modernized UI/UX with animations, dark theme, and stylish design
 st.markdown("""
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
 .stApp {
-    background-color: #0e1117;
-    color: white;
+    background-color: #1a1a2e;
+    color: #e0e0e0;
+    font-family: 'Roboto', sans-serif;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: #ffffff;
+    font-weight: 500;
 }
 .stButton>button {
-    background-color: #31333F;
+    background-color: #4a69bd;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
+    padding: 8px 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 .stButton>button:hover {
-    transform: scale(1.05);
-    transition: transform 0.2s ease;
+    background-color: #6b7280;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 .stTextInput input, .stSelectbox div, .stFileUploader label, .stTextArea textarea {
-    background-color: none !important;
-    color: #ffffff !important;
-    border: none !important;
-    border-radius: 4px;
+    background-color: #2d2d44 !important;
+    color: #e0e0e0 !important;
+    border: 1px solid #4a69bd !important;
+    border-radius: 8px;
+    transition: border-color 0.3s ease;
+}
+.stTextInput input:focus, .stSelectbox div:focus, .stTextArea textarea:focus {
+    border-color: #6b7280 !important;
 }
 div[data-testid="stFileUploaderDropzone"] {
-    background-color: none !important;
-    border: none !important;
-    color: #ffffff !important;
+    background-color: #2d2d44 !important;
+    border: 2px dashed #4a69bd !important;
+    color: #e0e0e0 !important;
+    border-radius: 8px;
+}
+div[data-testid="stTabs"] button {
+    background-color: #2d2d44;
+    color: #e0e0e0;
+    border-radius: 8px 8px 0 0;
+    transition: background-color 0.3s ease;
+}
+div[data-testid="stTabs"] button:hover {
+    background-color: #4a69bd;
 }
 div[data-testid="stTabs"] button p {
-    font-size: 20px !important;
-    font-weight: 600 !important;
-    color: white !important;
-}
-div[data-testid="stMarkdownContainer"] h2 {
     font-size: 18px !important;
+    font-weight: 500 !important;
 }
-div[data-testid="stMarkdownContainer"] p, div[data-testid="stMarkdownContainer"] li {
-    font-size: 14px !important;
+.stProgress .st-bo {
+    background-color: #4a69bd !important;
+}
+.stProgress .st-bo > div {
+    background-color: #6b7280 !important;
 }
 .stCheckbox label p {
     font-size: 14px !important;
+    color: #e0e0e0;
 }
 button[kind="secondary"][key^="edit_"] {
     font-size: 12px !important;
-    padding: 2px 8px !important;
+    padding: 4px 8px !important;
+    background-color: #4a69bd !important;
+    border-radius: 6px !important;
 }
-/* Footer Styling */
 .footer {
-    background-color: none;
+    background-color: #2d2d44;
     padding: 20px;
     text-align: center;
-    border-top: 1px solid #333;
+    border-top: 1px solid #4a69bd;
     margin-top: 40px;
+    border-radius: 8px;
 }
 .footer p {
     margin: 10px 0;
     font-size: 14px;
-    color: #cccccc;
+    color: #b0b0b0;
 }
 .footer a {
-    color: #cccccc;
+    color: #4a69bd;
     text-decoration: none;
     margin: 0 10px;
+    transition: color 0.3s ease;
 }
 .footer a:hover {
-    color: #ffffff;
-    text-decoration: underline;
+    color: #6b7280;
 }
 .social-icons a {
     margin: 0 15px;
     font-size: 20px;
-    color: #cccccc;
+    color: #b0b0b0;
+    transition: color 0.3s ease;
 }
 .social-icons a:hover {
-    color: #1DA1F2; /* Twitter blue as a hover color example */
+    color: #4a69bd;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.stMarkdown, .stSuccess, .stInfo, .stWarning, .stError {
+    animation: fadeIn 0.5s ease-in-out;
 }
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -120,6 +155,8 @@ if "first_visit" not in st.session_state:
     st.session_state.first_visit = True
 if "survey_submitted" not in st.session_state:
     st.session_state.survey_submitted = False
+if "resume_upload_time" not in st.session_state:
+    st.session_state.resume_upload_time = 5.0  # Default estimate for resume upload + parsing
 
 # Onboarding Walkthrough for first-time users
 if st.session_state.first_visit:
@@ -174,7 +211,6 @@ with tab1:
     st.subheader("🎯 Select Career Goal")
     st.session_state.goal = st.text_input("What role are you targeting?", placeholder="e.g., AI Developer, Product Manager", value=st.session_state.goal)
     
-    # Display extracted keywords if a goal is entered
     if st.session_state.goal.strip():
         goal_analysis = analyze_goals(st.session_state.goal)
         st.markdown(goal_analysis)
@@ -199,30 +235,57 @@ with tab1:
         "Mobile App Developer",
         "Other"
     ]
-    st.session_state.role = st.selectbox("Choosegettext:Choose a role", roles, index=roles.index(st.session_state.role) if st.session_state.role in roles else 0)
+    st.session_state.role = st.selectbox("Choose a role", roles, index=roles.index(st.session_state.role) if st.session_state.role in roles else 0)
     
-    # Show text input if "Other" is selected
     if st.session_state.role == "Other":
         st.session_state.custom_role = st.text_input("Please specify your role", placeholder="e.g., Game Developer", value=st.session_state.custom_role)
     
-    # Determine the effective role to use
     effective_role = st.session_state.custom_role if st.session_state.role == "Other" and st.session_state.custom_role else st.session_state.role
     
     st.subheader("📄 Upload Your Resume")
     uploaded_file = st.file_uploader("Upload your resume (PDF)", type="pdf")
     
     if uploaded_file is not None:
+        progress_bar = st.progress(0)
+        eta_placeholder = st.empty()
+        start_time = time.time()
+        
+        # Estimate total time (use previous upload + parsing time if available)
+        estimated_time = st.session_state.resume_upload_time
+        
+        # Phase 1: Upload (30% of progress)
         with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
             tmp_file.write(uploaded_file.read())
             tmp_path = tmp_file.name
+        
+        for i in range(30):
+            time.sleep(0.05)  # Simulate upload time
+            progress = (i + 1) / 100
+            elapsed = time.time() - start_time
+            eta = max(0, estimated_time - elapsed)
+            progress_bar.progress(int(progress * 100))
+            eta_placeholder.text(f"⏳ Uploading... Estimated time remaining: {eta:.1f} seconds")
+        
+        # Phase 2: Parsing (70% of progress)
         try:
+            parse_start = time.time()
             st.session_state.resume_text = parse_resume(tmp_path)
+            parse_end = time.time()
+            parse_time = parse_end - parse_start
+            
+            for i in range(30, 100):
+                time.sleep(parse_time / 70)  # Distribute parsing time across remaining progress
+                progress = (i + 1) / 100
+                elapsed = time.time() - start_time
+                eta = max(0, estimated_time - elapsed)
+                progress_bar.progress(int(progress * 100))
+                eta_placeholder.text(f"⏳ Parsing... Estimated time remaining: {eta:.1f} seconds")
+            
             if len(st.session_state.resume_text.strip()) > 20:
-                st.success("✅ Resume uploaded successfully!")
+                st.success("✅ Resume uploaded and parsed successfully!")
             else:
                 st.error("⚠️ Failed to extract meaningful content. Try another resume.")
         except FileNotFoundError:
-            # Suppress FileNotFoundError since the app is working correctly
             if len(st.session_state.resume_text.strip()) > 20:
                 st.success("✅ Resume uploaded and parsed!")
             else:
@@ -233,7 +296,13 @@ with tab1:
             try:
                 os.remove(tmp_path)
             except FileNotFoundError:
-                pass  # Suppress error if the file is already deleted
+                pass
+        
+        # Update estimated time for future uploads
+        total_time = time.time() - start_time
+        st.session_state.resume_upload_time = total_time
+        progress_bar.empty()
+        eta_placeholder.empty()
     
     if st.button("🚀 Generate Roadmap"):
         if not st.session_state.resume_text.strip():
@@ -246,15 +315,31 @@ with tab1:
             st.error("❌ Please enter a Gemini API key in the sidebar.")
         else:
             with st.spinner("Generating roadmap..."):
-                # Progress bar and ETA based on actual or estimated time
+                # Initialize progress bar immediately
                 progress_bar = st.progress(0)
                 eta_placeholder = st.empty()
                 start_time = time.time()
                 
-                # Estimate total time (use previous generation time if available)
-                estimated_time = st.session_state.generation_time
+                # Break into stages with estimated weights
+                stages = {
+                    "Analyzing Resume": 30,
+                    "Generating Prompt": 20,
+                    "API Call & Response": 50
+                }
+                total_stages = sum(stages.values())
+                current_progress = 0
                 
-                # Generate roadmap and measure actual time
+                # Stage 1: Analyzing Resume
+                for i in range(stages["Analyzing Resume"]):
+                    time.sleep(0.05)  # Simulate analysis time
+                    current_progress += 1
+                    progress = (current_progress / total_stages) * 100
+                    elapsed = time.time() - start_time
+                    eta = max(0, st.session_state.generation_time - elapsed)
+                    progress_bar.progress(int(progress))
+                    eta_placeholder.text(f"⏳ Analyzing Resume... Estimated time remaining: {eta:.1f} seconds")
+                
+                # Stage 2: Generating Prompt
                 genai.configure(api_key=st.session_state.gemini_api_key)
                 prompt = (
                     f"Create a personalized learning roadmap to help the user achieve their career goal of becoming a {effective_role} "
@@ -267,29 +352,39 @@ with tab1:
                     f"and tag each resource with relevant labels (e.g., 'YouTube', 'Beginner-Friendly', 'Coursera') in the format: "
                     f"'* <step> - <tag1>, <tag2>'. Ensure the roadmap is practical and tailored to the user's goal and role."
                 )
+                for i in range(stages["Generating Prompt"]):
+                    time.sleep(0.03)  # Simulate prompt generation time
+                    current_progress += 1
+                    progress = (current_progress / total_stages) * 100
+                    elapsed = time.time() - start_time
+                    eta = max(0, st.session_state.generation_time - elapsed)
+                    progress_bar.progress(int(progress))
+                    eta_placeholder.text(f"⏳ Generating Prompt... Estimated time remaining: {eta:.1f} seconds")
+                
+                # Stage 3: API Call & Response
                 roadmap_start = time.time()
                 st.session_state.roadmap = generate_roadmap(prompt)
                 roadmap_end = time.time()
-                actual_time = roadmap_end - roadmap_start
+                api_time = roadmap_end - roadmap_start
+                
+                for i in range(stages["API Call & Response"]):
+                    time.sleep(api_time / 50)  # Distribute API time across remaining progress
+                    current_progress += 1
+                    progress = (current_progress / total_stages) * 100
+                    elapsed = time.time() - start_time
+                    eta = max(0, st.session_state.generation_time - elapsed)
+                    progress_bar.progress(int(progress))
+                    eta_placeholder.text(f"⏳ Fetching Roadmap... Estimated time remaining: {eta:.1f} seconds")
                 
                 # Update estimated time for future generations
+                actual_time = time.time() - start_time
                 st.session_state.generation_time = actual_time
                 
-                # Update progress bar and ETA (retroactively for this run)
-                elapsed = time.time() - start_time
-                for i in range(100):
-                    progress = min(1.0, elapsed / actual_time)
-                    progress_bar.progress(int(progress * 100))
-                    eta = max(0, actual_time - elapsed)
-                    eta_placeholder.text(f"⏳ Estimated time remaining: {eta:.1f} seconds")
-                    time.sleep(0.05)  # Small delay to make progress visible
-                    elapsed = time.time() - start_time
                 progress_bar.empty()
                 eta_placeholder.empty()
             
             st.success("✅ Roadmap generated! Check it in the Roadmap tab.")
             
-            # In-App Survey after roadmap generation
             if not st.session_state.survey_submitted:
                 st.subheader("📋 Quick Feedback")
                 ease_rating = st.slider(
@@ -315,10 +410,8 @@ with tab1:
 # Roadmap Tab
 with tab2:
     if st.session_state.roadmap:
-        # Use inline CSS to ensure the roadmap header size (as per your manual change)
         st.markdown('<h1 style="font-size: 40px;">🗺️ Your AI-Powered Learning Roadmap</h1><br>', unsafe_allow_html=True)
         
-        # Skill match score (as per your manual change)
         required_skills = {
             "AI Engineer": ["Python", "Machine Learning", "TensorFlow", "NLP"],
             "Frontend Developer": ["HTML", "CSS", "JavaScript", "React"],
@@ -336,10 +429,7 @@ with tab2:
             "Software Engineer": ["Java", "Python", "Git", "Algorithms"],
             "Mobile App Developer": ["Swift", "Kotlin", "React Native", "Flutter"]
         }
-        # Default skills for custom roles
         default_skills = ["Python", "Git", "Problem Solving", "Communication"]
-        
-        # Use required skills for predefined roles, or default skills for custom roles
         skills_to_check = required_skills.get(effective_role, default_skills)
         
         if skills_to_check:
@@ -348,7 +438,6 @@ with tab2:
             st.subheader("📊 Skill Match Score")
             st.markdown(f'<p style="font-size: 40px;"><h5>●    Your skills match {skill_match_score:.1f}% of the requirements for {effective_role}.</h5></p>', unsafe_allow_html=True)
         
-        # Skill gap analysis with course recommendations
         course_recommendations = {
             "Python": "Python for Everybody - Coursera",
             "Machine Learning": "Machine Learning by Andrew Ng - Coursera",
@@ -402,7 +491,6 @@ with tab2:
             if missing_skills:
                 st.subheader("🔍 Skill Gap Analysis")
                 st.markdown(f'<p style="font-size: 40px;"><h5>●    Skills missing for {effective_role}: {", ".join(missing_skills)}</h5></p>', unsafe_allow_html=True)
-                # Course recommendations for missing skills
                 st.subheader("📚 Recommended Courses for Skill Gaps")
                 for skill in missing_skills:
                     if skill in course_recommendations:
@@ -412,28 +500,24 @@ with tab2:
             else:
                 st.markdown(f'<p style="font-size: 40px;"><h5>✅ Your resume covers all key skills for this role!</h5></p>', unsafe_allow_html=True)
         
-        # Tag-based course filters (fixed)
         st.subheader("🏷️ Filter Courses")
         tags = set()
         for line in st.session_state.roadmap.splitlines():
             line = line.strip()
             if not line or not line.startswith("*"):
                 continue
-            # Look for tags in the format: "* <course> - <tag1>, <tag2>"
             if " - " in line:
                 parts = line.split(" - ", 1)
                 tag_part = parts[-1]
                 if "," in tag_part:
                     line_tags = [tag.strip() for tag in tag_part.split(",")]
                     tags.update(line_tags)
-            # Look for tags in the format: "* <course> [<tag1>, <tag2>]"
             elif "[" in line and "]" in line:
                 tag_part = line[line.find("[") + 1:line.find("]")]
                 if "," in tag_part:
                     line_tags = [tag.strip() for tag in tag_part.split(",")]
                     tags.update(line_tags)
         
-        # If no tags are found, use default tags and show debug info
         if not tags:
             tags = {"YouTube", "Beginner-Friendly", "Advanced", "Udemy", "Coursera"}
             st.warning("⚠️ No tags found in the roadmap. Using default tags. Below is the roadmap content for debugging:")
@@ -441,7 +525,6 @@ with tab2:
         
         selected_tags = st.multiselect("Filter by tags (e.g., YouTube, Beginner-Friendly)", sorted(tags))
         
-        # Progress tracker and roadmap display
         st.subheader("📈 Progress Tracker")
         load_progress()
         roadmap_lines = st.session_state.roadmap.splitlines()
@@ -453,7 +536,6 @@ with tab2:
                 continue
             display_line = line
             if selected_tags:
-                # Check if the line has tags matching the selected ones
                 line_tags = []
                 if " - " in line:
                     tag_part = line.split(" - ", 1)[-1]
@@ -467,10 +549,8 @@ with tab2:
                     continue
             
             if line.startswith("**"):
-                # Display the previous section if it has content
                 if current_section and section_content:
                     st.markdown(f"## {current_section}")
-                    # Show Edit button only if the section has actionable content
                     if any(item.startswith("*") for item in section_content):
                         if st.button("Edit Section", key=f"edit_{i-len(section_content)}"):
                             st.session_state.editing_section = i - len(section_content)
@@ -485,13 +565,11 @@ with tab2:
                                 save_progress()
                         else:
                             st.markdown(content_line)
-                # Start a new section
                 current_section = line[2:]
                 section_content = []
             else:
                 section_content.append(line)
         
-        # Display the last section
         if current_section and section_content:
             st.markdown(f"## {current_section}")
             if any(item.startswith("*") for item in section_content):
@@ -509,7 +587,6 @@ with tab2:
                 else:
                     st.markdown(content_line)
         
-        # Live edit suggestions
         if st.session_state.editing_section is not None:
             edit_index = st.session_state.editing_section
             section_line = roadmap_lines[edit_index]
@@ -541,7 +618,6 @@ with tab2:
                     st.session_state.editing_section = None
                     st.rerun()
         
-        # Interactive Q&A
         st.subheader("❓ Ask About Your Roadmap")
         question = st.text_input("Enter your question (e.g., 'How long will SQL take?')")
         if st.button("Get Answer"):
@@ -560,7 +636,6 @@ with tab2:
             else:
                 st.warning("⚠️ Please enter a question.")
         
-        # Feedback loop
         st.subheader("💬 Was this helpful?")
         col1, col2 = st.columns(2)
         with col1:
@@ -576,7 +651,6 @@ with tab2:
                     f.write("\n")
                 st.success("✅ Thank you for your feedback! We'll work on improving.")
         
-        # Export options
         st.subheader("📥 Export Your Roadmap")
         
         st.download_button(
@@ -586,7 +660,7 @@ with tab2:
             mime="text/plain"
         )
         
-        # PDF export with improved formatting
+        # PDF export with improved design
         def clean_text(text):
             replacements = {
                 "–": "-",  # En dash to hyphen
@@ -601,7 +675,6 @@ with tab2:
             return text.encode("ascii", "ignore").decode("ascii")
 
         def wrap_text(c, text, x, y, max_width, font_name, font_size, line_spacing=12):
-            """Helper function to wrap text and draw it on the canvas."""
             c.setFont(font_name, font_size)
             words = text.split()
             lines = []
@@ -639,19 +712,18 @@ with tab2:
             content_width = width - left_margin - right_margin
 
             # Colors
-            header_color = HexColor("#2E2E2E")  # Dark gray for headers
-            text_color = HexColor("#000000")    # Black for body text
-            accent_color = HexColor("#4682B4")  # Steel blue for accents
+            header_color = HexColor("#2E2E2E")
+            text_color = HexColor("#000000")
+            accent_color = HexColor("#4682B4")
+            bg_color = HexColor("#E6F0FA")  # Light blue background for sections
 
             def draw_header():
-                """Draw header on each page."""
                 c.setFont("Helvetica-Bold", 12)
                 c.setFillColor(accent_color)
                 c.drawString(left_margin, height - 0.5 * inch, "SkillWise Learning Roadmap")
                 c.setFillColor(text_color)
 
             def draw_footer(page_num):
-                """Draw footer on each page."""
                 c.setFont("Helvetica-Oblique", 8)
                 c.setFillColor(header_color)
                 c.drawCentredString(width / 2, bottom_margin, f"Generated by SkillWise | Page {page_num}")
@@ -661,8 +733,11 @@ with tab2:
             y_position = height - top_margin
             page_num = 1
 
-            # Draw first page header
+            # Draw first page header and logo
             draw_header()
+            # Note: Logo cannot be added directly as we can't access local files.
+            # Uncomment and replace 'path_to_logo.png' with the actual path to your logo file.
+            # c.drawImage("path_to_logo.png", left_margin, height - 0.8 * inch, width=1.5*inch, height=0.5*inch)
 
             # Title
             c.setFont("Helvetica-Bold", 16)
@@ -675,7 +750,7 @@ with tab2:
 
             # Generation date
             c.setFont("Helvetica", 10)
-            y_position -= 10  # Extra spacing
+            y_position -= 10
             y_position = wrap_text(
                 c, f"Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", left_margin, y_position,
                 content_width, "Helvetica", 10, line_spacing=14
@@ -692,42 +767,40 @@ with tab2:
                 if not line:
                     continue
 
-                # Check if we need a new page
-                if y_position < bottom_margin + 1.5 * inch:  # Reserve space for footer and some buffer
+                if y_position < bottom_margin + 1.5 * inch:
                     draw_footer(page_num)
                     c.showPage()
                     page_num += 1
                     draw_header()
                     y_position = height - top_margin
 
-                # Strip Markdown and apply formatting
                 if line.startswith("##"):
-                    # Main header (e.g., "Personalized Learning Roadmap")
                     text = line[2:].strip()
                     c.setFont("Helvetica-Bold", 14)
                     c.setFillColor(header_color)
-                    y_position -= 10  # Extra spacing before header
+                    y_position -= 10
                     y_position = wrap_text(
                         c, text, left_margin, y_position, content_width,
                         "Helvetica-Bold", 14, line_spacing=16
                     )
                     c.setFillColor(text_color)
-                    y_position -= 10  # Extra spacing after header
+                    y_position -= 10
                     indent = left_margin
 
                 elif line.startswith("**") and line.endswith("**"):
-                    # Phase header (e.g., "Phase 1: Foundational Cloud Knowledge")
                     text = line[2:-2].strip()
-                    # Check if there's enough space for the phase header and at least one item
-                    if y_position < bottom_margin + 3 * inch:  # Reserve space for header + 2 lines
+                    if y_position < bottom_margin + 3 * inch:
                         draw_footer(page_num)
                         c.showPage()
                         page_num += 1
                         draw_header()
                         y_position = height - top_margin
 
-                    c.setFont("Helvetica-Bold", 12)
+                    # Draw colored background for phase header
+                    c.setFillColor(bg_color)
+                    c.rect(left_margin - 10, y_position - 5, content_width + 20, 20, fill=True, stroke=False)
                     c.setFillColor(accent_color)
+                    c.setFont("Helvetica-Bold", 12)
                     y_position -= 10
                     y_position = wrap_text(
                         c, text, left_margin, y_position, content_width,
@@ -739,7 +812,6 @@ with tab2:
                     current_phase = text
 
                 elif line.startswith("*"):
-                    # Bullet point (e.g., "- 1. Choose a primary cloud platform:")
                     text = line[1:].strip()
                     c.setFont("Helvetica", 10)
                     y_position = wrap_text(
@@ -749,7 +821,6 @@ with tab2:
                     indent = bullet_indent
 
                 elif line.startswith("-"):
-                    # Sub-bullet (e.g., "- AWS Certified Cloud Practitioner (if choosing AWS):")
                     text = line[1:].strip()
                     c.setFont("Helvetica", 10)
                     y_position = wrap_text(
@@ -759,16 +830,13 @@ with tab2:
                     indent = bullet_indent + 0.2 * inch
 
                 else:
-                    # Regular text (e.g., "Note: This roadmap is a suggestion...")
                     c.setFont("Helvetica", 10)
                     y_position = wrap_text(
                         c, line, indent, y_position, content_width - (indent - left_margin),
                         "Helvetica", 10, line_spacing=12
                     )
 
-            # Draw footer on the last page
             draw_footer(page_num)
-
             c.save()
             pdf_bytes = buffer.getvalue()
             buffer.close()
@@ -786,7 +854,6 @@ with tab2:
             except Exception as e:
                 st.error(f"❌ Error generating PDF: {str(e)}")
         
-        # JSON export
         roadmap_data = {
             "resume": st.session_state.resume_text,
             "goal": st.session_state.goal,
@@ -801,7 +868,6 @@ with tab2:
             mime="application/json"
         )
         
-        # Shareable link (simulated)
         unique_id = hash(st.session_state.roadmap) % 1000000
         with open(f"roadmap_{unique_id}.json", "w") as f:
             json.dump(roadmap_data, f)
@@ -809,7 +875,7 @@ with tab2:
     else:
         st.info("🚧 Generate a roadmap in the Resume tab.")
 
-# Footer with social media handles, copyright, and additional links
+# Footer
 st.markdown("""
 <div class="footer">
     <div class="social-icons">
