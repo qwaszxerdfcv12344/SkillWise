@@ -3,5 +3,5 @@ pytesseract
 google-generativeai
 PyMuPDF
 Pillow
-fpdf2
+fpdf
 nltk
