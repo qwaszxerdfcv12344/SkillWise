@@ -17,7 +17,7 @@ import google.generativeai as genai
 # Configure Streamlit page
 st.set_page_config(page_title="SkillWise - AI Roadmap Generator", layout="wide", initial_sidebar_state="expanded")
 
-# Modernized UI/UX with animations, dark theme, and stylish design
+# Updated UI/UX with improved hover colors, field styles, tab backgrounds, and smaller edit buttons
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
@@ -41,23 +41,24 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 .stButton>button:hover {
-    background-color: #6b7280;
+    background-color: #60a5fa; /* Updated hover color to a vibrant light blue */
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
-.stTextInput input, .stSelectbox div, .stFileUploader label, .stTextArea textarea {
+.stTextInput input, .stSelectbox div, .stTextArea textarea {
     background-color: #2d2d44 !important;
     color: #e0e0e0 !important;
-    border: 1px solid #4a69bd !important;
+    border: none !important; /* Removed border for a cleaner look */
     border-radius: 8px;
     transition: border-color 0.3s ease;
 }
 .stTextInput input:focus, .stSelectbox div:focus, .stTextArea textarea:focus {
-    border-color: #6b7280 !important;
+    border: none !important;
+    box-shadow: 0 0 5px rgba(96, 165, 250, 0.5) !important; /* Subtle glow on focus */
 }
 div[data-testid="stFileUploaderDropzone"] {
-    background-color: #2d2d44 !important;
-    border: 2px dashed #4a69bd !important;
+    background-color: #3b3b5a !important; /* Lighter background for drag-and-drop */
+    border: 2px dashed #60a5fa !important; /* Softer border color */
     color: #e0e0e0 !important;
     border-radius: 8px;
 }
@@ -74,19 +75,24 @@ div[data-testid="stTabs"] button p {
     font-size: 18px !important;
     font-weight: 500 !important;
 }
+div[data-testid="stTab"] {
+    background-color: rgba(45, 45, 68, 0.8); /* Semi-transparent background for tab content */
+    padding: 20px; /* Added padding */
+    border-radius: 8px;
+}
 .stProgress .st-bo {
     background-color: #4a69bd !important;
 }
 .stProgress .st-bo > div {
-    background-color: #6b7280 !important;
+    background-color: #60a5fa !important; /* Match progress bar with hover color */
 }
 .stCheckbox label p {
     font-size: 14px !important;
     color: #e0e0e0;
 }
 button[kind="secondary"][key^="edit_"] {
-    font-size: 12px !important;
-    padding: 4px 8px !important;
+    font-size: 10px !important; /* Further reduced size */
+    padding: 3px 6px !important; /* Further reduced padding */
     background-color: #4a69bd !important;
     border-radius: 6px !important;
 }
@@ -110,7 +116,7 @@ button[kind="secondary"][key^="edit_"] {
     transition: color 0.3s ease;
 }
 .footer a:hover {
-    color: #6b7280;
+    color: #60a5fa; /* Updated hover color for footer links */
 }
 .social-icons a {
     margin: 0 15px;
@@ -119,7 +125,7 @@ button[kind="secondary"][key^="edit_"] {
     transition: color 0.3s ease;
 }
 .social-icons a:hover {
-    color: #4a69bd;
+    color: #60a5fa; /* Updated hover color for social icons */
 }
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
@@ -150,13 +156,13 @@ if "progress" not in st.session_state:
 if "editing_section" not in st.session_state:
     st.session_state.editing_section = None
 if "generation_time" not in st.session_state:
-    st.session_state.generation_time = 10.0  # Default estimate in seconds
+    st.session_state.generation_time = 10.0
 if "first_visit" not in st.session_state:
     st.session_state.first_visit = True
 if "survey_submitted" not in st.session_state:
     st.session_state.survey_submitted = False
 if "resume_upload_time" not in st.session_state:
-    st.session_state.resume_upload_time = 5.0  # Default estimate for resume upload + parsing
+    st.session_state.resume_upload_time = 5.0
 
 # Onboarding Walkthrough for first-time users
 if st.session_state.first_visit:
@@ -250,7 +256,7 @@ with tab1:
         eta_placeholder = st.empty()
         start_time = time.time()
         
-        # Estimate total time (use previous upload + parsing time if available)
+        # Estimate total time
         estimated_time = st.session_state.resume_upload_time
         
         # Phase 1: Upload (30% of progress)
@@ -259,7 +265,7 @@ with tab1:
             tmp_path = tmp_file.name
         
         for i in range(30):
-            time.sleep(0.05)  # Simulate upload time
+            time.sleep(0.05)
             progress = (i + 1) / 100
             elapsed = time.time() - start_time
             eta = max(0, estimated_time - elapsed)
@@ -274,7 +280,7 @@ with tab1:
             parse_time = parse_end - parse_start
             
             for i in range(30, 100):
-                time.sleep(parse_time / 70)  # Distribute parsing time across remaining progress
+                time.sleep(parse_time / 70)
                 progress = (i + 1) / 100
                 elapsed = time.time() - start_time
                 eta = max(0, estimated_time - elapsed)
@@ -315,12 +321,10 @@ with tab1:
             st.error("❌ Please enter a Gemini API key in the sidebar.")
         else:
             with st.spinner("Generating roadmap..."):
-                # Initialize progress bar immediately
                 progress_bar = st.progress(0)
                 eta_placeholder = st.empty()
                 start_time = time.time()
                 
-                # Break into stages with estimated weights
                 stages = {
                     "Analyzing Resume": 30,
                     "Generating Prompt": 20,
@@ -329,9 +333,8 @@ with tab1:
                 total_stages = sum(stages.values())
                 current_progress = 0
                 
-                # Stage 1: Analyzing Resume
                 for i in range(stages["Analyzing Resume"]):
-                    time.sleep(0.05)  # Simulate analysis time
+                    time.sleep(0.05)
                     current_progress += 1
                     progress = (current_progress / total_stages) * 100
                     elapsed = time.time() - start_time
@@ -339,7 +342,6 @@ with tab1:
                     progress_bar.progress(int(progress))
                     eta_placeholder.text(f"⏳ Analyzing Resume... Estimated time remaining: {eta:.1f} seconds")
                 
-                # Stage 2: Generating Prompt
                 genai.configure(api_key=st.session_state.gemini_api_key)
                 prompt = (
                     f"Create a personalized learning roadmap to help the user achieve their career goal of becoming a {effective_role} "
@@ -353,7 +355,7 @@ with tab1:
                     f"'* <step> - <tag1>, <tag2>'. Ensure the roadmap is practical and tailored to the user's goal and role."
                 )
                 for i in range(stages["Generating Prompt"]):
-                    time.sleep(0.03)  # Simulate prompt generation time
+                    time.sleep(0.03)
                     current_progress += 1
                     progress = (current_progress / total_stages) * 100
                     elapsed = time.time() - start_time
@@ -361,14 +363,13 @@ with tab1:
                     progress_bar.progress(int(progress))
                     eta_placeholder.text(f"⏳ Generating Prompt... Estimated time remaining: {eta:.1f} seconds")
                 
-                # Stage 3: API Call & Response
                 roadmap_start = time.time()
                 st.session_state.roadmap = generate_roadmap(prompt)
                 roadmap_end = time.time()
                 api_time = roadmap_end - roadmap_start
                 
                 for i in range(stages["API Call & Response"]):
-                    time.sleep(api_time / 50)  # Distribute API time across remaining progress
+                    time.sleep(api_time / 50)
                     current_progress += 1
                     progress = (current_progress / total_stages) * 100
                     elapsed = time.time() - start_time
@@ -376,7 +377,6 @@ with tab1:
                     progress_bar.progress(int(progress))
                     eta_placeholder.text(f"⏳ Fetching Roadmap... Estimated time remaining: {eta:.1f} seconds")
                 
-                # Update estimated time for future generations
                 actual_time = time.time() - start_time
                 st.session_state.generation_time = actual_time
                 
@@ -660,7 +660,7 @@ with tab2:
             mime="text/plain"
         )
         
-        # PDF export with improved design
+        # PDF export with fixed formatting
         def clean_text(text):
             replacements = {
                 "–": "-",  # En dash to hyphen
@@ -669,6 +669,8 @@ with tab2:
                 "‘": "'",  # Left single quote to straight quote
                 "“": '"',  # Left double quote to straight quote
                 "”": '"',  # Right double quote to straight quote
+                "*": "",  # Remove residual Markdown stars
+                ". ": "- ",  # Standardize bullet points
             }
             for unicode_char, ascii_char in replacements.items():
                 text = text.replace(unicode_char, ascii_char)
@@ -715,7 +717,7 @@ with tab2:
             header_color = HexColor("#2E2E2E")
             text_color = HexColor("#000000")
             accent_color = HexColor("#4682B4")
-            bg_color = HexColor("#E6F0FA")  # Light blue background for sections
+            bg_color = HexColor("#E6F0FA")
 
             def draw_header():
                 c.setFont("Helvetica-Bold", 12)
@@ -735,13 +737,13 @@ with tab2:
 
             # Draw first page header and logo
             draw_header()
-            # Note: Logo cannot be added directly as we can't access local files.
-            # Uncomment and replace 'path_to_logo.png' with the actual path to your logo file.
-            # c.drawImage("path_to_logo.png", left_margin, height - 0.8 * inch, width=1.5*inch, height=0.5*inch)
+            # Add logo from the provided path
+            c.drawImage(r"F:\Sahaj\Python\SkillWise\logo.png", left_margin, height - 0.8 * inch, width=1.5*inch, height=0.5*inch)
 
-            # Title
+            # Title (ensure no duplication)
             c.setFont("Helvetica-Bold", 16)
             c.setFillColor(header_color)
+            y_position -= 20  # Extra spacing to account for logo
             y_position = wrap_text(
                 c, "SkillWise Learning Roadmap", left_margin, y_position, content_width,
                 "Helvetica-Bold", 16, line_spacing=20
@@ -796,7 +798,6 @@ with tab2:
                         draw_header()
                         y_position = height - top_margin
 
-                    # Draw colored background for phase header
                     c.setFillColor(bg_color)
                     c.rect(left_margin - 10, y_position - 5, content_width + 20, 20, fill=True, stroke=False)
                     c.setFillColor(accent_color)
@@ -811,7 +812,7 @@ with tab2:
                     indent = left_margin
                     current_phase = text
 
-                elif line.startswith("*"):
+                elif line.startswith("-"):
                     text = line[1:].strip()
                     c.setFont("Helvetica", 10)
                     y_position = wrap_text(
@@ -820,8 +821,8 @@ with tab2:
                     )
                     indent = bullet_indent
 
-                elif line.startswith("-"):
-                    text = line[1:].strip()
+                elif line.startswith("  •"):
+                    text = line[3:].strip()
                     c.setFont("Helvetica", 10)
                     y_position = wrap_text(
                         c, f"  • {text}", bullet_indent + 0.2 * inch, y_position, content_width - 0.5 * inch,
