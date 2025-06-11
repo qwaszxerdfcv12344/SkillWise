@@ -15,11 +15,11 @@
     <img src="https://img.shields.io/badge/Deployed%20on-Streamlit-ff4b4b?logo=streamlit" alt="Streamlit Deploy">
   </a>
   &nbsp;
-  <a href="#features">🚀 Features</a> •
-  <a href="#screenshots">📸 Screenshots</a> •
-  <a href="#usage">💻 Usage</a> •
-  <a href="#roadmap">🧰 Roadmap</a> •
-  <a href="#license">📜 License</a>
+  <a href="https://github.com/Sahaj33-op/SkillWise?tab=readme-ov-file#-features">🚀 Features</a> •
+  <a href="https://github.com/Sahaj33-op/SkillWise?tab=readme-ov-file#-screenshots">📸 Screenshots</a> •
+  <a href="https://github.com/Sahaj33-op/SkillWise?tab=readme-ov-file#-usage">💻 Usage</a> •
+  <a href="https://github.com/Sahaj33-op/SkillWise?tab=readme-ov-file#-roadmap">🧰 Roadmap</a> •
+  <a href="https://github.com/Sahaj33-op/SkillWise?tab=readme-ov-file#-license">📜 License</a>
 </p>
 
 ---
