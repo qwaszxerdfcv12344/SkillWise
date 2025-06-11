@@ -8,6 +8,7 @@ from datetime import datetime
 from fpdf import FPDF
 from resume_parser import parse_resume
 from roadmap_generator import generate_roadmap
+from goal_analyzer import analyze_goals
 import google.generativeai as genai
 
 # Configure Streamlit page (must be the first Streamlit command)
@@ -169,6 +170,11 @@ tab1, tab2 = st.tabs(["Resume", "Roadmap"])
 with tab1:
     st.subheader("🎯 Select Career Goal")
     st.session_state.goal = st.text_input("What role are you targeting?", placeholder="e.g., AI Developer, Product Manager", value=st.session_state.goal)
+    
+    # Display extracted keywords if a goal is entered
+    if st.session_state.goal.strip():
+        goal_analysis = analyze_goals(st.session_state.goal)
+        st.markdown(goal_analysis)
     
     st.subheader("📚 Select Tech Role")
     roles = [

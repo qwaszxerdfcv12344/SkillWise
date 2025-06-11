@@ -4,3 +4,4 @@ google-generativeai
 PyMuPDF
 Pillow
 fpdf
+nltk
