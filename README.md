@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="https://skillwise-sahaj33.streamlit.app/" target="_blank">
+  <a href="https://skillwise-sahaj33.streamlit.app/" target="blank">
     <img src="https://img.shields.io/badge/Deployed%20on-Streamlit-ff4b4b?logo=streamlit" alt="Streamlit Deploy">
   </a>
   &nbsp;
