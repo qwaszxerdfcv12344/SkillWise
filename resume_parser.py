@@ -7,12 +7,6 @@ import tempfile
 def is_valid_pdf(file_path):
     """Check if file is a valid PDF."""
     try:
-        # Try using python-magic if available
-        import magic
-        mime = magic.Magic(mime=True)
-        file_type = mime.from_file(file_path)
-        return file_type == 'application/pdf'
-    except ImportError:
         # Fallback: Check file extension and try to open with PyMuPDF
         if not file_path.lower().endswith('.pdf'):
             return False
