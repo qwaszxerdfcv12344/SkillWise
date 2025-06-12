@@ -583,7 +583,7 @@ with tab2:
                 logo_height = 0.5 * inch
                 logo_x = left_margin
                 logo_y = height - 0.7 * inch
-                c.drawImage(r"F:\Sahaj\Python\SkillWise\logo.png", logo_x, logo_y, width=logo_width, height=logo_height, preserveAspectRatio=True)
+                c.drawImage(r".\logo.png", logo_x, logo_y, width=logo_width, height=logo_height, preserveAspectRatio=True)
                 
                 # Enhanced title styling
                 c.setFont("Helvetica-Bold", 24)
