@@ -1,0 +1,326 @@
+/* Main Button Styles */
+.stButton > button {
+    background-color: #4a69bd;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.stButton > button:hover {
+    background-color: #60a5fa;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Edit Button Styles */
+button[kind="secondary"][key^="edit_"] {
+    font-size: 10px !important;
+    padding: 3px 6px !important;
+    background-color: #4a69bd !important;
+    border-radius: 6px !important;
+}
+
+/* Download Button Styles */
+.download-button {
+    background-color: #4a69bd;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.download-button:hover {
+    background-color: #60a5fa;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Feedback Button Styles */
+.feedback-button {
+    background-color: #4a69bd;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.feedback-button:hover {
+    background-color: #60a5fa;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Social Media Button Styles */
+.social-button {
+    background-color: transparent;
+    color: #b0b0b0;
+    border: none;
+    transition: color 0.3s ease;
+    margin: 0 15px;
+    font-size: 20px;
+}
+
+.social-button:hover {
+    color: #60a5fa;
+}
+
+/* Tab Button Styles */
+div[data-testid="stTabs"] button {
+    background-color: transparent !important;
+    color: #e0e0e0;
+    border-radius: 8px 8px 0 0;
+    transition: color 0.3s ease;
+}
+
+div[data-testid="stTabs"] button:hover {
+    background-color: transparent !important;
+    color: #60a5fa;
+}
+
+div[data-testid="stTabs"] button p {
+    font-size: 18px !important;
+    font-weight: 500 !important;
+}
+
+div[data-testid="stTab"] {
+    background-color: transparent;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+/* Selectbox Label Styles */
+div[data-testid="stSelectbox"] label {
+    background: none !important;
+    color: #e0e0e0;
+}
+
+div[data-testid="stSelectbox"] div[data-baseweb="select"] {
+    background-color: #2d2d44 !important;
+    color: #e0e0e0 !important;
+    border: none !important;
+    border-radius: 8px;
+    transition: border-color 0.3s ease;
+}
+
+/* Additional Selectbox Label Override */
+div[data-testid="stSelectbox"] label p {
+    background: none !important;
+    color: #e0e0e0;
+}
+
+div[data-testid="stSelectbox"] label div {
+    background: none !important;
+}
+
+/* Progress Button Styles */
+.progress-button {
+    background-color: #4a69bd;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.progress-button:hover {
+    background-color: #60a5fa;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Question Button Styles */
+.question-button {
+    background-color: #4a69bd;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.question-button:hover {
+    background-color: #60a5fa;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* API Key Button Styles */
+.api-key-button {
+    background-color: #4a69bd;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.api-key-button:hover {
+    background-color: #60a5fa;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Common Button Properties */
+button {
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    outline: none;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Button Focus States */
+button:focus {
+    outline: 2px solid #60a5fa;
+    outline-offset: 2px;
+}
+
+/* Button Active States */
+button:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* --- Card Styles for Sections --- */
+.card {
+    background: #23234a;
+    border-radius: 14px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    padding: 32px 28px 24px 28px;
+    margin-bottom: 32px;
+    border-left: 6px solid #4a69bd;
+    transition: box-shadow 0.3s;
+}
+.card:hover {
+    box-shadow: 0 8px 32px rgba(96,165,250,0.10);
+}
+
+/* --- Section Divider --- */
+.divider {
+    border: none;
+    border-top: 2px solid #4a69bd;
+    margin: 32px 0 24px 0;
+    opacity: 0.2;
+}
+
+/* --- Headings --- */
+.card-title, .section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #60a5fa;
+    margin-bottom: 18px;
+    letter-spacing: 0.5px;
+}
+.card-subtitle {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #b0b0b0;
+    margin-bottom: 10px;
+}
+
+/* --- Checklist Styles --- */
+.checklist {
+    margin-left: 0;
+    padding-left: 0;
+    list-style: none;
+}
+.checklist li {
+    background: #2d2d44;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    padding: 12px 18px;
+    font-size: 1rem;
+    color: #e0e0e0;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+.checklist li .checkbox {
+    margin-right: 12px;
+}
+
+/* --- Progress Bar --- */
+.progress-bar {
+    background: #23234a;
+    border-radius: 8px;
+    height: 18px;
+    width: 100%;
+    margin-bottom: 18px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.progress-bar-fill {
+    background: linear-gradient(90deg, #4a69bd 0%, #60a5fa 100%);
+    height: 100%;
+    border-radius: 8px;
+    transition: width 0.4s ease;
+}
+
+/* --- Export Card --- */
+.export-card {
+    background: #23234a;
+    border-radius: 12px;
+    padding: 24px 20px;
+    margin-top: 24px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+/* --- Feedback Emoji Buttons --- */
+.emoji-btn {
+    font-size: 2rem;
+    background: none;
+    border: none;
+    margin: 0 10px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.emoji-btn:hover {
+    transform: scale(1.2);
+}
+
+/* --- Footer --- */
+.footer {
+    background-color: #2d2d44;
+    padding: 20px;
+    text-align: center;
+    border-top: 1px solid #4a69bd;
+    margin-top: 40px;
+    border-radius: 8px;
+    opacity: 0.7;
+}
+.footer p {
+    margin: 10px 0;
+    font-size: 13px;
+    color: #b0b0b0;
+}
+.footer a {
+    color: #4a69bd;
+    text-decoration: none;
+    margin: 0 10px;
+    transition: color 0.3s ease;
+}
+.footer a:hover {
+    color: #60a5fa;
+}
+
+/* --- Spacing Utility --- */
+.mt-2 { margin-top: 16px; }
+.mt-3 { margin-top: 24px; }
+.mb-2 { margin-bottom: 16px; }
+.mb-3 { margin-bottom: 24px; } 

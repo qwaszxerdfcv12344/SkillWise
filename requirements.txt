@@ -1,7 +1,9 @@
-streamlit
-pytesseract
-google-generativeai
-PyMuPDF
-Pillow
-reportlab
-nltk
+streamlit>=1.32.0
+PyMuPDF>=1.23.8
+google-generativeai>=0.3.2
+pytesseract>=0.3.10
+Pillow>=10.2.0
+reportlab>=4.1.0
+nltk>=3.8.1
+python-dotenv>=1.0.1
+python-magic-bin>=0.4.14
