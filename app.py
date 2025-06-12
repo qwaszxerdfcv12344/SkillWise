@@ -579,20 +579,27 @@ with tab2:
 
             def draw_header():
                 # Draw logo with enhanced positioning
-                logo_path = os.path.join(os.path.dirname(__file__), "logo.png")
-                logo_width = 1.5 * inch
-                logo_height = 0.5 * inch
-                logo_x = left_margin
-                logo_y = height - 0.7 * inch
-                c.drawImage(logo_path, logo_x, logo_y, width=logo_width, height=logo_height, preserveAspectRatio=True)
-                
+                try:
+                    logo_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "logo.png"))
+                    logo_width = 1.5 * inch
+                    logo_height = 0.5 * inch
+                    logo_x = left_margin
+                    logo_y = height - 0.7 * inch
+                    c.drawImage(logo_path, logo_x, logo_y, width=logo_width, height=logo_height, preserveAspectRatio=True)
+                except Exception as e:
+                    # If logo is missing, skip drawing it and print the attempted path
+                    print(f"[PDF] Could not load logo at {logo_path}: {e}")
+                    try:
+                        c.drawImage("logo.png", logo_x, logo_y, width=logo_width, height=logo_height, preserveAspectRatio=True)
+                    except Exception as e2:
+                        print(f"[PDF] Fallback logo.png also failed: {e2}")
+                    pass
                 # Enhanced title styling
                 c.setFont("Helvetica-Bold", 24)
                 c.setFillColor(primary_color)
-                title_x = logo_x + logo_width + 0.4 * inch
+                title_x = left_margin + 1.5 * inch + 0.4 * inch
                 title_y = height - 0.6 * inch
                 c.drawString(title_x, title_y, "SkillWise Learning Roadmap")
-                
                 # Decorative line with gradient
                 c.setStrokeColor(accent_color)
                 c.setLineWidth(2)
