@@ -579,11 +579,12 @@ with tab2:
 
             def draw_header():
                 # Draw logo with enhanced positioning
+                logo_path = os.path.join(os.path.dirname(__file__), "logo.png")
                 logo_width = 1.5 * inch
                 logo_height = 0.5 * inch
                 logo_x = left_margin
                 logo_y = height - 0.7 * inch
-                c.drawImage(r".\logo.png", logo_x, logo_y, width=logo_width, height=logo_height, preserveAspectRatio=True)
+                c.drawImage(logo_path, logo_x, logo_y, width=logo_width, height=logo_height, preserveAspectRatio=True)
                 
                 # Enhanced title styling
                 c.setFont("Helvetica-Bold", 24)
