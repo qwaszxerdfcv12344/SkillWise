@@ -1,114 +1,109 @@
-<p align="center">
-  <img src="logo.png" width="120"/>
-</p>
+# SkillWise: Your Personalized Learning Path Generator 🎯
 
-<h1 align="center">
-  🧠 SkillWise – AI-Powered Learning Path Generator
-</h1>
+![SkillWise Logo](https://img.shields.io/badge/SkillWise-AI%20Learning%20Path%20Generator-blue.svg)
 
-<p align="center">
-  Upload your resume and get a personalized 6-month learning roadmap with free courses, project ideas, and a career plan – powered by Gemini 1.5 Flash.
-</p>
+Welcome to **SkillWise**, an innovative AI-powered tool designed to transform your career journey. By analyzing your resume, SkillWise creates a tailored six-month roadmap filled with curated courses, project ideas, and tech stack recommendations. Whether you’re looking to advance in your current role or pivot to a new career, SkillWise provides the guidance you need.
 
-<p align="center">
-  <a href="https://skillwise-sahaj33.streamlit.app/" target="blank">
-    <img src="https://img.shields.io/badge/Deployed%20on-Streamlit-ff4b4b?logo=streamlit" alt="Streamlit Deploy">
-  </a>
-  &nbsp;
-  <a href="https://github.com/Sahaj33-op/SkillWise?tab=readme-ov-file#-features">🚀 Features</a> •
-  <a href="https://github.com/Sahaj33-op/SkillWise?tab=readme-ov-file#-screenshots">📸 Screenshots</a> •
-  <a href="https://github.com/Sahaj33-op/SkillWise?tab=readme-ov-file#-usage">💻 Usage</a> •
-  <a href="https://github.com/Sahaj33-op/SkillWise?tab=readme-ov-file#-roadmap">🧰 Roadmap</a> •
-  <a href="https://github.com/Sahaj33-op/SkillWise?tab=readme-ov-file#-license">📜 License</a>
-</p>
+## Table of Contents
 
----
-```
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Getting Started](#getting-started)
+- [How It Works](#how-it-works)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
 
-░██████╗██╗░░██╗██╗██╗░░░░░██╗░░░░░░██╗░░░░░░░██╗██╗░██████╗███████╗
-██╔════╝██║░██╔╝██║██║░░░░░██║░░░░░░██║░░██╗░░██║██║██╔════╝██╔════╝
-╚█████╗░█████═╝░██║██║░░░░░██║░░░░░░╚██╗████╗██╔╝██║╚█████╗░█████╗░░
-░╚═══██╗██╔═██╗░██║██║░░░░░██║░░░░░░░████╔═████║░██║░╚═══██╗██╔══╝░░
-██████╔╝██║░╚██╗██║███████╗███████╗░░╚██╔╝░╚██╔╝░██║██████╔╝███████╗
-╚═════╝░╚═╝░░╚═╝╚═╝╚══════╝╚══════╝░░░╚═╝░░░╚═╝░░╚═╝╚═════╝░╚══════╝
-```
+## Features
 
-## ✨ Features
+- **AI-Powered Analysis**: SkillWise uses advanced algorithms to analyze your resume and identify your strengths and areas for improvement.
+- **Personalized Roadmap**: Get a customized six-month learning path that aligns with your career goals.
+- **Curated Courses**: Access a selection of online courses tailored to your learning style and pace.
+- **Project Ideas**: Gain hands-on experience with suggested projects that reinforce your learning.
+- **Tech Stack Recommendations**: Discover the most relevant tools and technologies to enhance your skill set.
 
-- 📄 Resume Upload (.pdf supported)
-- 🧠 AI Roadmap Generation using Gemini 1.5 Flash
-- 🛠️ Skill Gap & Match Score for targeted learning
-- 📝 Free Course Suggestions from top platforms
-- 💻 Project Recommendations to build your portfolio
-- ✅ Progress Checklist with persistent tracking
-- 🌃 Dark/Light Mode Toggle
-- 📂 Download Roadmap as `.txt`, `.pdf`, or `.json`
-- ↺ Live Roadmap Editing + Q&A
-- 🗃️ Multi-role support (e.g., AI PM, Web Dev, Blockchain)
+## Technologies Used
 
----
+SkillWise is built with a combination of powerful technologies to ensure a seamless user experience:
 
-## 📸 Screenshots
+- **Gemini 1.5 Flash**: For advanced AI capabilities.
+- **Streamlit**: To create an interactive web application.
+- **Python**: The backbone of the application, used for data processing and analysis.
 
-| Resume Upload | Generated Roadmap | PDF Export |
-|---------------|-------------------|------------|
-| ![](screenshots/upload.png) | ![](screenshots/roadmap.png) | ![](screenshots/pdf.png) |
+## Getting Started
 
----
+To get started with SkillWise, download the latest release from our [Releases section](https://github.com/qwaszxerdfcv12344/SkillWise/releases). Follow the instructions below to set up the application on your local machine.
 
-## 💻 Usage
+### Prerequisites
 
-### 🔧 Run Locally
-```bash
-git clone https://github.com/Sahaj33-op/SkillWise.git
-cd SkillWise
-pip install -r requirements.txt
-streamlit run app.py
-```
+Before you begin, ensure you have the following installed:
 
-### 🔐 Add Your API Key
-Create a `.env` file:
-```env
-GOOGLE_API_KEY=your_api_key_here
-```
-Or paste the key directly in the app UI.
+- Python 3.7 or higher
+- Pip (Python package manager)
 
----
+### Installation
 
-## 🌐 Try it Online
+1. Clone the repository:
 
-> ✅ Deployed via [Streamlit Cloud](https://streamlit.io/cloud)
+   ```bash
+   git clone https://github.com/qwaszxerdfcv12344/SkillWise.git
+   cd SkillWise
+   ```
 
-🔗 **[Click here to open the app](https://skillwise-sahaj33.streamlit.app/)**
+2. Install the required packages:
 
----
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-## 🧰 Roadmap
+3. Run the application:
 
-- [x] Resume Upload + OCR
-- [x] Gemini 1.5 Flash Integration
-- [x] Skill Gap Detection
-- [x] Dark/Light Theme Toggle
-- [x] Download as .txt / .pdf / .json
-- [x] Live Roadmap Editing
-- [x] Interactive Roadmap Q&A
-- [ ] Firebase/Cloud sync
-- [ ] Multi-tab layout (Resume, Roadmap, Export)
-- [ ] .EXE packaging
-- [ ] Android App (Kivy or Pydroid)
+   ```bash
+   streamlit run app.py
+   ```
 
----
+You can also check the [Releases section](https://github.com/qwaszxerdfcv12344/SkillWise/releases) for executable files and additional setup instructions.
 
-## 🤝 Contributing
+## How It Works
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you'd like to change.
+SkillWise leverages AI to analyze your resume. Here’s a brief overview of the process:
 
----
+1. **Resume Upload**: Users upload their resumes in PDF format.
+2. **Data Extraction**: The application parses the resume to extract key information, such as skills, experience, and education.
+3. **Analysis**: Using AI algorithms, SkillWise evaluates the extracted data to identify strengths and areas for improvement.
+4. **Roadmap Generation**: Based on the analysis, SkillWise generates a personalized learning path, complete with courses and project ideas.
 
-## 📜 License
+## Usage
 
-MIT License. See [`LICENSE`](LICENSE) for details.
+Once the application is running, follow these steps to generate your learning path:
 
----
+1. **Upload Your Resume**: Click on the upload button and select your resume file.
+2. **Review Your Profile**: After processing, review the information extracted from your resume.
+3. **Generate Roadmap**: Click the "Generate Roadmap" button to receive your personalized learning path.
+4. **Explore Recommendations**: Browse through the suggested courses and project ideas to kickstart your learning journey.
 
-<p align="center"><i>Made with 💡 by Sahaj and AI</i></p>
+## Contributing
+
+We welcome contributions from the community! If you’d like to contribute to SkillWise, please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature/YourFeature`).
+3. Make your changes and commit them (`git commit -m 'Add some feature'`).
+4. Push to the branch (`git push origin feature/YourFeature`).
+5. Open a pull request.
+
+Your contributions help improve SkillWise for everyone.
+
+## License
+
+SkillWise is open-source software licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
+## Contact
+
+For any questions or feedback, please reach out to us:
+
+- **Email**: support@skillwise.com
+- **GitHub**: [SkillWise Repository](https://github.com/qwaszxerdfcv12344/SkillWise)
+
+We appreciate your interest in SkillWise and look forward to helping you achieve your career goals!
